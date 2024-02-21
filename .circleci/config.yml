@@ -1,0 +1,30 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: ubuntu-2204:2024.01.1
+    steps:
+      - checkout
+
+      - run:
+          name: Install Docker Compose
+          environment:
+            COMPOSE_VERSION: '1.29.2'
+          command: |
+            curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
+            chmod +x ~/docker-compose
+            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+
+      - run:
+          name: Start compose and verify it's working
+          command: |
+            set -x
+            docker compose -file docker-compose-full.yml up 
+
+      - run:
+          name: Run Tests
+          command: |
+            set -x
+            python3 -m venv venv && source venv/bin/activate  
+            pip3 install -r requirements.txt
+            python3 -m unittest discover src/test

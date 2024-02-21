@@ -1,0 +1,23 @@
+
+{%extends "components/base.jinja" %} 
+
+{%block title%}Popular Poké App - {{pokemon.names[0].name}} VS {{rival.names[0].name}}{% endblock title %}
+{%block content%} 
+    <div class="container">
+            {% with pokemon=pokemon, rival=rival, rh=rh, ph=ph %}
+            {% include "components/battle.jinja" %}
+            {% endwith %}       
+        <div class="row row-gap-3">
+            <div class="col">
+                {% with pokemon=pokemon %}
+                {% include "components/pokecard.jinja" %}
+                {% endwith %}
+            </div>
+            <div class="col">
+                {% with pokemon=rival %}
+                {% include "components/pokecard.jinja" %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

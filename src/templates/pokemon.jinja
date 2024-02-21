@@ -1,0 +1,45 @@
+
+{%extends "components/base.jinja" %} 
+
+{%block title%}Popular Poké App - {{pokemon.names[0].name}}{% endblock title %}
+{%block content%} 
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                {% with pokemon=pokemon %}
+                {% include "components/pokecard.jinja" %}
+                {% endwith %}
+            </div>
+            <div class="col">
+                <h2>Goes by</h2>
+                <table class="table">
+                    <tbody>
+                        {% for name in pokemon.names %}
+                            <tr>
+                                <th scope="row">
+                                    {{ name.name }}
+                                </th>
+                                <th scope="row">
+                                    {{ name.lang }}
+                                </th>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <h2>Best Dates</h2>
+                <table class="table">
+                    <tbody>
+                        {% for date in pokemon.counts %}
+                            <tr>
+                                <th scope="row">
+                                    {{ date.date }}
+                                </th>
+                                <td>{{ date.hits }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,38 @@
+
+{%extends "components/base.jinja" %} 
+
+{%block title%}Popular Poké App - Search{% endblock title %}
+
+{%block content%} 
+<h1 class="text-center">Found these Pokémon</h1>
+<div class="container">
+    <div class="col">
+      <h2>Search Results</h2>
+      <table class="table">
+        <tbody>
+          {% for pokemon in pokelist %}
+            <tr>
+                <th scope="row">
+                  <a href="/id/{{pokemon[0].id}}">
+                    <img src="{{pokemon[0].image}}" alt="{{pokemon[0].names[0].name}}" height="100px">
+                  </a>
+                </th>
+                <th scope="row">
+                  <a href="/id/{{pokemon[0].id}}">
+                    {{  pokemon[0].names[0].name }}
+                  </a>
+                </th>
+                <th scope="row">
+                  <a href="/id/{{pokemon[0].id}}">
+                    {{pokemon[2]}} : {{  pokemon[1] }}
+                  </a>
+                </th>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

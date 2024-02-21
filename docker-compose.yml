@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  postgres-api:
+    image: postgres:14.3
+    hostname: pgsql
+    container_name: pokeapp-database
+    ports:
+      - '5555:5432'
+    environment:
+      POSTGRES_DB: 'pokedb'
+      POSTGRES_USER: 'pokedb_user'
+      POSTGRES_PASSWORD: 'pokedb_user_password'
+      ADDITIONAL_POSTGRES_DBS: 'pokedb_test'
+    volumes:
+      - ./src/db:/docker-entrypoint-initdb.d
+      - ./.docker-data/.pg-data:/var/lib/postgresql/data
+  rabbitmq:
+    hostname: rabbitmq
+    image: rabbitmq:3.10.5-management
+    container_name: pokeapp-rabbit
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+      - '15692:15692'
+    volumes:
+      - ./.docker-data/.rabbit-data:/var/lib/rabbitmq/
+      - ./.docker-data/.rabbit-log:/var/log/rabbitmq
+      - ./config/.rabbit-plugins:/etc/rabbitmq/enabled_plugins
+    environment:
+      RABBITMQ_ERLANG_COOKIE: rabbitmq-prometheus
+  prometheus:
+    container_name: prometheus
+    hostname: prometheus
+    image: prom/prometheus
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./.docker-data/.prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090
+  grafana:
+    container_name: grafana
+    hostname: grafana
+    image: grafana/grafana
+    volumes:
+      - ./config/grafana_dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+      - ./config/grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
+      - ./config/grafana_config.ini:/etc/grafana/config.ini
+      - ./config/grafana_dashboards:/dashboards
+      - ./.docker-data/.grafana_data:/var/lib/grafana
+    ports:
+      - 3000:3000
+    environment:
+      GF_INSTALL_PLUGINS: "flant-statusmap-panel,grafana-piechart-panel"

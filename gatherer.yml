@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  gatherer-app:
+    container_name: gatherer-app
+    restart: always
+    hostname: gathererapp
+    image: python:3.11-alpine
+    environment:
+      RABBITHOST: 'rabbitmq'
+      SAVEPATH: '/datalayer/lastqueries.json'
+    volumes:
+      - .:/code
+      - ./.docker-data/.gatherer:/datalayer/
+      - ./config/python_starter.sh:/datalayer/python.sh
+    ports:
+      - 3030:3000
+    command: sh /datalayer/python.sh gatherer
