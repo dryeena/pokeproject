@@ -13,7 +13,7 @@ metrics.info('app_info', 'Poke App', version='24.1.0.1')
 @app.route("/")
 def home():
     contenders = db.getDateChamps(datetime.datetime.today().date())
-    champ = contenders[0][0] if len(contenders) > 0 else []
+    champ = contenders[0][0] if contenders else []
     return render_template('home.jinja', champ=champ, contenders=contenders)
 
 @app.route("/search", methods=["POST"])
